@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>끝말잇기</title>
+</head>
+
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어: <span id="word"></span></div>
+    <input type="text">
+    <button>입력</button>
+    <script>
+        const number = parseInt(prompt('참가 인원을 입력해주세요'), 10);
+        const yesOrNo = confirm(number + '명이 맞나요?');
+
+        // 이벤트 발생
+        const $button = document.querySelector('button');   // 버튼 클릭 이벤트 선택, 저장
+        const $input = document.querySelector('input');     // 텍스트 입력 이벤트 선택, 저장
+        const $word = document.querySelector('#word');
+        const $order = document.querySelector('#order');
+        let word;   // 제시어
+        let newWord; // 새로 입력한 단어
+        let now;
+
+        const onClickButton = function () {
+            if (!word || word[word.length - 1] === newWord[0]) {        // 제시어가 비어있는가?
+                word = newWord;
+                $word.textContent = word;
+                const order = parseInt($order.textContent);
+
+                // 순서 넘기기
+                if (order + 1 > number) {
+                    $order.textContent = 1;
+                } else {
+                    $order.textContent = order + 1;
+                }
+            } else { // 올바르지 않은가
+                alert('올바르지 않은 단어입니다.');
+            }
+            $input.value = '';  // 입력창 비우기
+            $input.focus();       // 입력창에 커서 두기
+        };
+        const onInput = function (event) {
+            newWord = event.target.value;
+        };
+
+        $button.addEventListener('click', onClickButton);
+        $input.addEventListener('input', onInput);
+
+    </script>
+</body>
+
+</html>

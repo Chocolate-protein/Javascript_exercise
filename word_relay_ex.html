@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쿵쿵따</title>
+</head>
+
+<body>
+    <div><span id="order">1</span>번째 사람</div>
+    <div>제시어: <span id="word"></span></div>
+    <input type="text">
+    <button>입력</button>
+    <script>
+        let number = parseInt(prompt('몇 명이 참가하나요'));
+        // 입력한 값이 0이상의 정수가 맞는가
+        while ((!number === true) || (number < 1)) {
+            alert('0보다 큰 정수를 입력하세요');
+            number = parseInt(prompt('참가 인원을 다시 입력하세요'));
+        }
+
+
+        // 입력한 값이 정확한가
+        let check = confirm(number + '명이 맞나요');
+        if (check === false) {
+            while (check === false) {
+                number = parseInt(prompt('참가 인원을 다시 입력하세요'));
+                check = confirm(number + '명이 맞나요');
+            }
+        }
+
+        let $button = document.querySelector('button');
+        let $input = document.querySelector('input');
+        let $word = document.querySelector('#word');
+        let $order = document.querySelector('#order');
+        let word;       // 제시어
+        let newWord;    // 입력한 단어
+        let nowNum = parseInt($order.textContent);     // 현재 참가자 번호
+
+        $input.focus();
+
+        const onClickButton = function () {
+            // 단어가 세글자인가?
+            if (newWord.length === 3 && (!word || word[word.length - 1] === newWord[0])) {
+                word = newWord;
+                $word.textContent = word;
+                if (nowNum + 1 > number) {
+                    nowNum = 1;
+                }
+                else {
+                    nowNum += 1;
+                }
+                $order.textContent = nowNum;
+            }
+            else {
+                alert('틀렸습니다. 다른 단어를 입력하세요.');
+            }
+            $input.value = '';
+            $input.focus();
+        };
+
+        const onInput = function (event) {
+            newWord = event.target.value;
+        };
+
+        $input.addEventListener('input', onInput);
+        $button.addEventListener('click', onClickButton);
+
+    </script>
+</body>
+
+</html>
