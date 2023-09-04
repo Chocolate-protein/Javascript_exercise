@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>forEach, map, fill</title>
+</head>
+
+<body>
+    <script>
+        const answer = [3, 1, 4, 6];
+        const value = '3214';
+        let strike = 0;
+        let ball = 0;
+
+        // for (let i = 0; i < answer.length; i++) {
+        //     const index = value.indexOf(answer[i]);
+        //     if (index > -1) {
+        //         if (index === i) {
+        //             strike += 1;
+        //         }
+        //         else {
+        //             ball += 1;
+        //         }
+        //     }
+        // }
+
+        // 1. forEach
+        // 첫번째 : element == 3, i == 0
+        // 두번째 : element == 1, i == 1 ...
+        // 모든 요소에 함수 반복 적용
+        answer.forEach(function (element, i) {
+            // 함수
+            const index = value.indexOf(element);
+            if (index > -1) {
+                if (index === i) {
+                    strike += 1;
+                }
+                else {
+                    ball += 1;
+                }
+            }
+        })
+
+
+        // 2. map : 기존 배열은 보존, 새 배열 생성하여 함수 결과값 리턴
+        const array = [1,2,3,4];
+        array.map(function(element,i) {
+            return element * 2;
+        })
+        // 결과 : return [2, 4, 6, 8], array = [1, 2, 3, 4]
+
+
+        // 3. fill
+        // Array(n) : n 크기의 빈 배열 생성
+        // .fill(ㅁ) : 배열의 모든 요소를 ㅁ으로 채움
+        const arrayFill = Array(4).fill(0); 
+        // arrayFill = [0, 0, 0, 0]
+
+        // ex
+        const arrayEX = Array(5).fill(0).map(function(element, index) {
+            return index += 1;
+        })
+        // arrayEx = [1, 2, 3, 4, 5]
+
+    </script>
+</body>
+
+</html>

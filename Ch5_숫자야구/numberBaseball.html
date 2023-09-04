@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 야구</title>
+</head>
+
+<body>
+    <form id="form">
+        <input type="text" id="input">
+        <button>확인</button>
+    </form>
+    <div id="logs"></div>
+    <script>
+        const $input = document.querySelector("#input");
+        const $form = document.querySelector("#form");
+        const $logs = document.querySelector("#logs");
+
+        // Math.floor : 내림 , Math.random : 0 ~ 1 난수, round : 반올림, ceil : 올림
+        const numbers = [];
+        for (let n = 0; n < 9; n++) {
+            numbers.push(n + 1);       // nubmers = [1,2,3,4,5,6,7,8,9]
+        }
+
+        const answer = [];
+        for (let n = 0; n < 4; n++) {
+            const index = Math.floor(Math.random() * numbers.length);
+            answer.push(numbers[index]);
+            numbers.splice(index, 1);
+        }
+        console.log(answer);
+
+        const tries = [];       // 시도한 숫자들
+        function checkInput(input) {        // 입력값 검사 코드
+            if (input.length !== 4) {
+                return alert('4자리 숫자를 입력해주세요.');
+            }
+            // new Set : 중복 제거 코드
+            if (new Set(input).size !== 4) {  // 중복된 숫자(2번이상 입력한 숫자)가 있는가
+                return alert('중복되지 않게 입력해주세요.');
+            }
+            // array.includes(input) : array 안에 input 값이 있는지 확인
+            if (tries.includes(input)) {    // 이미 시도한 값인가
+                return alert('이미 시도한 값입니다.');
+            }
+            return true;
+        };
+
+        let out = 0;
+        $form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const value = $input.value;     // == event.target.value;
+            $input.value = '';
+
+            if (!checkInput(value)) {
+                tries.push(value);
+                return;
+            }
+
+            // .join('ㅁ') : 배열 -> 문자열 변경 / ㅁ : 문자 구분 기준
+            // ex) .join(',')  [3, 1, 4, 6] -> '3,1,4,6' )
+            // .split('a') : 문자열 -> 배열
+            // ex) "3146".split('1')  "3146" -> ['3', '46']
+
+            // 입력값 문제 없음
+            if (answer.join('') === value) {
+                $logs.append('홈런!');
+                return;
+            }
+            if (tries.length >= 9) {
+                $logs.appendChild(document.createTextNode(`패배! 정답은 ${answer.join('')}`));
+                return;
+            }
+            // 스트라이크, 볼 검사
+            let strike = 0;
+            let ball = 0;
+            
+            for (let i = 0; i < answer.length; i++) { // a : 3146 , v : 1234
+                const index = value.indexOf(answer[i]);
+                if (index > -1) {   // 일치하는 숫자 발견
+                    if (index === i) {
+                        strike += 1;
+                    }
+                    else {
+                        ball += 1;
+                    }
+                }
+            }
+            // ` ${value} ` 문자열에 value 값 대입
+            // .append : .appendChild의 개선형, createTextNode 없이 태그나 텍스트 추가 가능, 여러 요소 동시 추가 가능
+
+            if (strike === 0 && ball === 0) {
+                $logs.append(`${value} : ${out}아웃`, document.createElement('br'));
+                out++;
+                if (out === 3) {
+                    $logs.append(`3아웃, 패배! 정답은 ${answer.join('')}`);
+                    return;
+                }
+            }
+            else {
+                $logs.append(`${value} : ${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
+                tries.push(value);
+            }
+        })
+    </script>
+</body>
+
+</html>
