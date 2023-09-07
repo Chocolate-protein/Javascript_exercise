@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 추첨기</title>
+    <style>
+        .ball {
+            display: inline-block;
+            border: 1px solid black;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            text-align: center;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="result">추첨 결과는? </div>
+    <div id="bonus">보너스: </div>
+    <script>
+        // 로또 번호 1~45 배열 생성
+        const candidate = Array(45).fill().map(function (value, index) { return index + 1 });
+
+        // 공 섞기
+        const shuffle = [];
+        while (candidate.length > 0) {
+            const random = Math.floor(Math.random() * candidate.length); // 0~44 중 하나 랜덤 선택
+            const spliceArray = candidate.splice(random, 1);    // (0~44 + 1) 숫자 저장
+            const value = spliceArray[0];   // value 에 선택한 숫자 저장
+            shuffle.push(value);    //shuffle 배열에 value 추가
+        }
+
+        // for (let i = candidate.length; i > 0; i--) {
+        //     const random = Math.floor(Math.random() * i); // 0~44 중 하나 랜덤
+        //     const spliceArray = candidate.splice(random, 1);    // (0~44 + 1) 숫자 저장
+        //     const value = spliceArray[0];   // value 에 선택한 숫자 저장
+        //     shuffle.push(value);    //shuffle 배열에 value 추가
+        // }
+
+        // 공 추출, 정렬하기
+        const winBalls = shuffle.slice(0, 6).sort((a, b) => b - a);
+        const bonus = winBalls.slice(0, 1);
+
+        console.log(winBalls, bonus);
+
+        const $result = document.querySelector('#result');
+        const $bonus = document.querySelector('#bonus');
+
+        function colorize(number, $tag) {
+            if (number < 10) {
+                $tag.style.backgroundColor = 'red';
+                $tag.style.color = 'white';
+            } 
+            else if (number < 20){
+                $tag.style.backgroundColor = 'orange';
+            }
+            else if (number < 30){
+                $tag.style.backgroundColor = 'yellow';
+            }
+            else if (number < 40){
+                $tag.style.backgroundColor = 'blue';
+                $tag.style.color = 'white';
+            }
+            else {
+                $tag.style.backgroundColor = 'green';
+                $tag.style.color = 'white';
+            }
+        };
+
+        const showBall = function (number, $target) {
+            const $ball = document.createElement('div');
+            $ball.className = 'ball';
+            $ball.textContent = number;
+            $target.appendChild($ball);
+            colorize(number, $ball);
+        }
+
+        // setTimeout(function() { ms초 뒤에 실행할 내용 }, ms);
+
+        for (let i = winBalls.length; i >= 1; i--) {
+            if (i === 1) {
+                setTimeout(() => {
+                    showBall(winBalls[i - 1], $bonus);
+                }, parseInt((7 - i) + '000'));
+            }
+            else {
+                setTimeout(() => {
+                    showBall(winBalls[i - 1], $result);
+                }, parseInt((7 - i) + '000'));
+            }
+        }
+
+        // for (var i = winBalls.length; i >= 1; i--) {
+        //     (function (j) {
+        //         if (j === 1) {
+        //             setTimeout(() => {
+        //                 showBall(winBalls[j - 1], $bonus);
+        //             }, parseInt((7 - j) + '000'));
+        //         }
+        //         else {
+        //             setTimeout(() => {
+        //                 showBall(winBalls[j - 1], $result);
+        //             }, parseInt((7 - j) + '000'));
+        //         }
+        //     })(i);
+        // }
+
+
+    </script>
+</body>
+
+</html>
